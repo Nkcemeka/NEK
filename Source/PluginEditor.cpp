@@ -14,6 +14,9 @@ NEKAudioProcessorEditor::NEKAudioProcessorEditor (NEKAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p), keyboardComponent(audioProcessor.keyboardState,
         juce::MidiKeyboardComponent::horizontalKeyboard), chordScreen(p)
 {
+    // Start Timer
+    startTimerHz(60);
+
     // Setup stuff for keyboard Component
     keyboardComponent.setLowestVisibleKey(21);
     keyboardComponent.setScrollButtonWidth(1);
@@ -24,6 +27,7 @@ NEKAudioProcessorEditor::NEKAudioProcessorEditor (NEKAudioProcessor& p)
     addAndMakeVisible(chordScreen);
     addAndMakeVisible(flatToggle);
     addAndMakeVisible(sharpToggle);
+    addAndMakeVisible(visualizer);
 
     // Iniit Buttons setup 
     handleButton();
@@ -51,6 +55,7 @@ NEKAudioProcessorEditor::NEKAudioProcessorEditor (NEKAudioProcessor& p)
 
 NEKAudioProcessorEditor::~NEKAudioProcessorEditor()
 {
+    stopTimer();
 }
 
 //==============================================================================
@@ -83,6 +88,9 @@ void NEKAudioProcessorEditor::resized()
     chordScreen.setBounds(x, y, 300, 100);
     flatToggle.setBounds(new_x_flat, new_y_flat, 55, 25);
     sharpToggle.setBounds(new_x_sharp, new_y_sharp, 55, 25);
+
+    // Setup our visualizer
+    visualizer.setBounds(650, y - 46, 200, 200);
 }
 
 void NEKAudioProcessorEditor::setAccidental(bool state)
@@ -107,6 +115,15 @@ void NEKAudioProcessorEditor::handleButton() {
         // Change colour of sharpToggle to off
         sharpToggle.setColour(juce::TextButton::buttonColourId, juce::Colour(139, 0, 0));
         sharpToggle.setColour(juce::TextButton::buttonOnColourId, juce::Colour(139, 0, 0));
+
+        // Change notes in visualizer to flats
+        std::vector<int> temp{ 2, 3, 4, 5, 6 };
+        for (auto elem : temp) {
+            // eqn here is this: posCircle = (5 x posCircle) % 12
+            // Hence for audioProcessor, we pass (5 * elem) % 12
+            // RHS is the pos in 12TET pitch class system
+            visualizer.notesVec[elem].key = audioProcessor.noteMapF[(int)(5 * elem) % 12];;
+        }
     }
     else {
         // Change colour of sharpToggle to On
@@ -116,5 +133,20 @@ void NEKAudioProcessorEditor::handleButton() {
         // Change colour of flatToggle to off
         flatToggle.setColour(juce::TextButton::buttonColourId, juce::Colour(139, 0, 0));
         flatToggle.setColour(juce::TextButton::buttonOnColourId, juce::Colour(139, 0, 0));
+
+        // Change notes in visualizer to sharps
+        std::vector<int> temp{ 2, 3, 4, 5, 6 };
+        for (auto elem : temp) {
+            // eqn here is this: posCircle = (5 x posCircle) % 12
+            // Hence for audioProcessor, we pass (5 * elem) % 12
+            // RHS is the pos in 12TET pitch class system
+            visualizer.notesVec[elem].key = audioProcessor.noteMap[(int)(5 * elem) % 12];;
+        }
     }
+}
+
+void NEKAudioProcessorEditor::timerCallback()
+{
+    // Call circleUpdate
+    visualizer.circleUpdate(audioProcessor.rootNote);
 }

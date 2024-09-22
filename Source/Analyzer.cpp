@@ -26,7 +26,7 @@ std::string getChordName(std::vector<bool>& noteBuffer,
     std::vector<bool>& keyBuffer, std::map<int, std::string>& intervalMap,
     std::map<std::string, std::string>& chordMap, std::map<int, std::string>& noteMap,
     std::map<int, std::string>& noteMapF, std::map<std::string, std::string>& reverseMap,
-    bool flats) {
+    bool flats, std::atomic<int>& rootNote) {
     // Clear the noteBuffer; this is important in order
     // to prevent unexpected behaviour when holding down
     // notes and adding others on top
@@ -80,11 +80,14 @@ std::string getChordName(std::vector<bool>& noteBuffer,
         chordName = chordName + chordMap[intervals];
 
         if (chordName != "") {
+            rootNote = root;
             if (flats) {
                 return noteMapF[root] + chordName;
             }
             return noteMap[root] + chordName;
         }
     }
+
+    rootNote = -1;
     return "";
 }

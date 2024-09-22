@@ -159,7 +159,7 @@ void NEKAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
 
         // Display chord name or depict as notes if no detection
         ch = getChordName(noteBuffer, keyboardBuffer, intervalMap, chordMap, noteMap,
-            noteMapF, reverseMap, flats);
+            noteMapF, reverseMap, flats, rootNote);
 
         if (ch == "") {
             // Show notes if chord not detected

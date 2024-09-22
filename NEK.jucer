@@ -11,6 +11,13 @@
       <FILE id="niPAv8" name="g12.png" compile="0" resource="1" file="Assets/g12.png"/>
     </GROUP>
     <GROUP id="{8594B36D-DEB6-AD90-B17B-48A72CE0E079}" name="Source">
+      <FILE id="MNhFas" name="CircleofFifths.cpp" compile="1" resource="0"
+            file="Source/CircleofFifths.cpp"/>
+      <FILE id="kkNugD" name="CircleofFifths.h" compile="0" resource="0"
+            file="Source/CircleofFifths.h"/>
+      <FILE id="yYWF2U" name="CircleButton.cpp" compile="1" resource="0"
+            file="Source/CircleButton.cpp"/>
+      <FILE id="Kwfj3W" name="CircleButton.h" compile="0" resource="0" file="Source/CircleButton.h"/>
       <FILE id="M1TnoT" name="CustomMidiKeyboardComponent.h" compile="0"
             resource="0" file="Source/CustomMidiKeyboardComponent.h"/>
       <FILE id="PE1SOE" name="CustomMidiKeyboardComponent.cpp" compile="1"

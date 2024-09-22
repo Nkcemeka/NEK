@@ -12,13 +12,14 @@
 #include "PluginProcessor.h"
 #include "Screen.h"
 #include "CustomMidiKeyboardComponent.h"
+#include "CircleofFifths.h"
 
 //==============================================================================
 /**
 */
 
 
-class NEKAudioProcessorEditor  : public juce::AudioProcessorEditor
+class NEKAudioProcessorEditor  : public juce::AudioProcessorEditor, private juce::Timer
 {
 public:
 
@@ -28,6 +29,7 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
+    void timerCallback() override;
 
 private:
     // This reference is provided as a quick way for your editor to
@@ -40,7 +42,7 @@ private:
     void setAccidental(bool state);
     void handleButton();
     juce::Image logo;
-
+    CircleofFifths visualizer;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NEKAudioProcessorEditor)
 };
