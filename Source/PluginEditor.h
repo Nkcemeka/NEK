@@ -9,10 +9,12 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "LookAndFeel.h"
 #include "PluginProcessor.h"
 #include "Screen.h"
 #include "CustomMidiKeyboardComponent.h"
 #include "CircleofFifths.h"
+#include "Stave.h"
 
 //==============================================================================
 /**
@@ -30,6 +32,8 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
     void timerCallback() override;
+    void keyMenuChanged();
+    void updateKeyMenu();
 
 private:
     // This reference is provided as a quick way for your editor to
@@ -43,6 +47,10 @@ private:
     void handleButton();
     juce::Image logo;
     CircleofFifths visualizer;
+    LookAndFeel lnf;
+    Stave grandStave{ audioProcessor.keyboardBuffer};
+    juce::ComboBox keyMenu;
+    juce::Label keyMenuLabel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NEKAudioProcessorEditor)
 };

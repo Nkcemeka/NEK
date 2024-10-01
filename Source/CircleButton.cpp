@@ -36,7 +36,7 @@ void CircleButton::paintButton(juce::Graphics& g, bool isMouseOverButton, bool i
 
     // set font and draw text
     g.setColour(textColor);
-    g.setFont(13.0f);
+    g.setFont(18.0f);
     g.drawText(key, bounds, juce::Justification::centred, true);
 }
 

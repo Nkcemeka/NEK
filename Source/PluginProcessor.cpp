@@ -156,27 +156,9 @@ void NEKAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
         else if (message.isNoteOff()) {
             keyboardBuffer[message.getNoteNumber()] = false;
         }
-
-        // Display chord name or depict as notes if no detection
-        ch = getChordName(noteBuffer, keyboardBuffer, intervalMap, chordMap, noteMap,
-            noteMapF, reverseMap, flats, rootNote);
-
-        if (ch == "") {
-            // Show notes if chord not detected
-            for (int i = 0; i < 128; ++i) {
-                if (keyboardBuffer[i]) {
-                    if (flats) {
-                        ch = ch + noteMapF[i % 12] + ", ";
-                    }
-                    else {
-                        ch = ch + noteMap[i % 12] + ", ";
-                    }
-                }
-            }
-            ch = ch + "";
-            ch = ch.substring(0, ch.length() - 2);
-        };
     }
+    handleChord(noteBuffer, keyboardBuffer, intervalMap, chordMap, noteMap,
+        noteMapF, reverseMap, flats, rootNote);
 }
 
 //==============================================================================
@@ -211,3 +193,30 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
     return new NEKAudioProcessor();
 }
 
+
+void NEKAudioProcessor::handleChord(std::vector<bool>& noteBuffer,
+    std::vector<bool>& keyBuffer, std::map<int, juce::String>& intervalMap,
+    std::map<juce::String, juce::String>& chordMap, std::map<int, juce::String>& noteMap,
+    std::map<int, juce::String>& noteMapF, std::map<juce::String, juce::String>& reverseMap,
+    bool flats, std::atomic<int>& rootNote)
+{
+    // Display chord name or depict as notes if no detection
+    ch = getChordName(noteBuffer, keyBuffer, intervalMap, chordMap, noteMap,
+        noteMapF, reverseMap, flats, rootNote);
+
+    if (ch == "") {
+        // Show notes if chord not detected
+        for (int i = 0; i < 128; ++i) {
+            if (keyboardBuffer[i]) {
+                if (flats) {
+                    ch = ch + noteMapF[i % 12] + ", ";
+                }
+                else {
+                    ch = ch + noteMap[i % 12] + ", ";
+                }
+            }
+        }
+        ch = ch + "";
+        ch = ch.substring(0, ch.length() - 2);
+    };
+}

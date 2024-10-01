@@ -27,11 +27,11 @@ public:
     std::vector<bool> noteBuffer; // Contains the state of all active pitch classes (0 - 11)
     std::vector<bool> keyboardBuffer; // Contains the state of all active MIDI notes (0 - 127)
     juce::MidiKeyboardState keyboardState;
-    std::map<int, std::string> intervalMap;
-    std::map<std::string, std::string> chordMap;
-    std::map<int, std::string> noteMap; // Map for sharps
-    std::map<int, std::string> noteMapF; // Map for flats
-    std::map<std::string, std::string> reverseMap; // Map for intervallic inversions
+    std::map<int, juce::String> intervalMap;
+    std::map<juce::String, juce::String> chordMap;
+    std::map<int, juce::String> noteMap; // Map for sharps
+    std::map<int, juce::String> noteMapF; // Map for flats
+    std::map<juce::String, juce::String> reverseMap; // Map for intervallic inversions
     bool flats; // Flag to show if the user wants chord names as flats or sharps
 
 
@@ -68,6 +68,11 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     std::atomic <int> rootNote{ -1 };
+    void handleChord(std::vector<bool>& noteBuffer,
+        std::vector<bool>& keyBuffer, std::map<int, juce::String>& intervalMap,
+        std::map<juce::String, juce::String>& chordMap, std::map<int, juce::String>& noteMap,
+        std::map<int, juce::String>& noteMapF, std::map<juce::String, juce::String>& reverseMap,
+        bool flats, std::atomic<int>& rootNote);
 
 private:
     //==============================================================================

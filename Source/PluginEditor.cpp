@@ -14,6 +14,9 @@ NEKAudioProcessorEditor::NEKAudioProcessorEditor (NEKAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p), keyboardComponent(audioProcessor.keyboardState,
         juce::MidiKeyboardComponent::horizontalKeyboard), chordScreen(p)
 {
+    // Set LookAndFeel
+    juce::LookAndFeel::setDefaultLookAndFeel(&lnf);
+
     // Start Timer
     startTimerHz(60);
 
@@ -28,24 +31,42 @@ NEKAudioProcessorEditor::NEKAudioProcessorEditor (NEKAudioProcessor& p)
     addAndMakeVisible(flatToggle);
     addAndMakeVisible(sharpToggle);
     addAndMakeVisible(visualizer);
+    addAndMakeVisible(grandStave);
+    addAndMakeVisible(keyMenu);
+    addAndMakeVisible(keyMenuLabel);
 
-    // Iniit Buttons setup 
+    // add Key options
+    keyMenu.setColour(juce::ComboBox::outlineColourId, juce::Colours::transparentBlack);
+    updateKeyMenu();
+    keyMenu.onChange = [this] {keyMenuChanged(); };
+
+    // Init keyMenuLabel
+    keyMenuLabel.setFont(juce::Font(20.0f, juce::Font::bold));
+    keyMenuLabel.setColour(juce::Label::textColourId, juce::Colours::black);
+    keyMenuLabel.setText("Key: ", juce::NotificationType::dontSendNotification);
+    
+    // Init Buttons setup 
     handleButton();
 
     // Flat and Sharp button settings
     flatToggle.setClickingTogglesState(true);
     flatToggle.setColour(juce::TextButton::textColourOffId, juce::Colours::white);
     flatToggle.setColour(juce::TextButton::textColourOnId, juce::Colours::white);
+    flatToggle.setColour(juce::ComboBox::outlineColourId, juce::Colours::transparentBlack);
     flatToggle.setButtonText("FLAT");
     flatToggle.onClick = [this] {audioProcessor.flats = !audioProcessor.flats;
-    handleButton(); };
+    handleButton();
+    updateKeyMenu();
+        };
 
     sharpToggle.setClickingTogglesState(true);
+    sharpToggle.setColour(juce::ComboBox::outlineColourId, juce::Colours::transparentBlack);
     sharpToggle.setColour(juce::TextButton::textColourOffId, juce::Colours::white);
     sharpToggle.setColour(juce::TextButton::textColourOnId, juce::Colours::white);
     sharpToggle.setButtonText("SHARP");
     sharpToggle.onClick = [this] {audioProcessor.flats = !audioProcessor.flats;
     handleButton();
+    updateKeyMenu();
         };
 
     // Make sure that before the constructor has finished, you've set the
@@ -64,7 +85,9 @@ void NEKAudioProcessorEditor::paint (juce::Graphics& g)
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll(juce::Colour::Colour(255, 255, 255));
     logo = juce::ImageCache::getFromMemory(BinaryData::g12_png, BinaryData::g12_pngSize);
-    g.drawImageWithin(logo, 15, 15, 37, 38, juce::RectanglePlacement::stretchToFit);
+    int x = 15;
+    int y = 10; // originally 15
+    g.drawImageWithin(logo, x, y, 37, 38, juce::RectanglePlacement::centred);
     
 }
 
@@ -90,7 +113,16 @@ void NEKAudioProcessorEditor::resized()
     sharpToggle.setBounds(new_x_sharp, new_y_sharp, 55, 25);
 
     // Setup our visualizer
-    visualizer.setBounds(650, y - 46, 200, 200);
+    visualizer.setBounds(50, y - 46, 200, 200);
+
+    // Setup the Grand Stave
+    grandStave.setBounds(650, y-40, 200, 180);
+
+    // Setup key Menu popup
+    keyMenu.setBounds(700, y - 40, 60, 20);
+
+    // Setup key Menu Label
+    keyMenuLabel.setBounds(645, y - 40, 40, 20);
 }
 
 void NEKAudioProcessorEditor::setAccidental(bool state)
@@ -103,6 +135,7 @@ void NEKAudioProcessorEditor::handleButton() {
     // Get the current state of the flat param in
     // audioProcessor
     bool state = audioProcessor.flats;
+    grandStave.toggleState = state; // update the Grand Stave's state
 
     if (state) {
         // This means flats should be on and
@@ -143,10 +176,48 @@ void NEKAudioProcessorEditor::handleButton() {
             visualizer.notesVec[elem].key = audioProcessor.noteMap[(int)(5 * elem) % 12];;
         }
     }
+    grandStave.changeBounds(); // pass changes to Stave as well for proper engraving
 }
 
 void NEKAudioProcessorEditor::timerCallback()
 {
     // Call circleUpdate
     visualizer.circleUpdate(audioProcessor.rootNote);
+}
+
+void NEKAudioProcessorEditor::keyMenuChanged()
+{
+    grandStave.setKey(keyMenu.getText());
+    grandStave.repaint();
+}
+
+
+void NEKAudioProcessorEditor::updateKeyMenu()
+{
+    // clear current items
+    keyMenu.clear();
+
+    if (audioProcessor.flats) {
+        keyMenu.addItem("F", 1);
+        keyMenu.addItem(juce::CharPointer_UTF8("B\u266d"), 2);
+        keyMenu.addItem(juce::CharPointer_UTF8("E\u266d"), 3);
+        keyMenu.addItem(juce::CharPointer_UTF8("A\u266d"), 4);
+        keyMenu.addItem(juce::CharPointer_UTF8("D\u266d"), 5);
+        keyMenu.addItem(juce::CharPointer_UTF8("G\u266d"), 6);
+        keyMenu.addItem(juce::CharPointer_UTF8("C\u266d"), 7);
+    }
+    else {
+
+        keyMenu.addItem("C", 1);
+        keyMenu.addItem("G", 2);
+        keyMenu.addItem("D", 3);
+        keyMenu.addItem("A", 4);
+        keyMenu.addItem("E", 5);
+        keyMenu.addItem("B", 6);
+        keyMenu.addItem("F#", 7);
+        keyMenu.addItem("C#", 8);
+    }
+
+
+    keyMenu.setSelectedId(1);
 }

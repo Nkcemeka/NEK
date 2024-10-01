@@ -8,9 +8,20 @@
               pluginManufacturerCode="NEKC">
   <MAINGROUP id="nRhQAO" name="NEK">
     <GROUP id="{46088EA8-7512-53F9-EB39-6212A161BF7B}" name="Assets">
+      <FILE id="wHng2n" name="bassClefPNG.png" compile="0" resource="1" file="../../Downloads/bassClefPNG.png"/>
+      <FILE id="RQCy6G" name="FreeSerif-4aeK.ttf" compile="0" resource="1"
+            file="Assets/FreeSerif-4aeK.ttf"/>
       <FILE id="niPAv8" name="g12.png" compile="0" resource="1" file="Assets/g12.png"/>
+      <FILE id="XfZc6q" name="trebleClefPNG.png" compile="0" resource="1"
+            file="../../Downloads/trebleClefPNG.png"/>
     </GROUP>
     <GROUP id="{8594B36D-DEB6-AD90-B17B-48A72CE0E079}" name="Source">
+      <FILE id="W3uTbg" name="NoteHead.cpp" compile="1" resource="0" file="Source/NoteHead.cpp"/>
+      <FILE id="AGtpbh" name="NoteHead.h" compile="0" resource="0" file="Source/NoteHead.h"/>
+      <FILE id="r1xhkM" name="Stave.cpp" compile="1" resource="0" file="Source/Stave.cpp"/>
+      <FILE id="uAaOlE" name="Stave.h" compile="0" resource="0" file="Source/Stave.h"/>
+      <FILE id="DhEeoW" name="LookAndFeel.cpp" compile="1" resource="0" file="Source/LookAndFeel.cpp"/>
+      <FILE id="Dtkdig" name="LookAndFeel.h" compile="0" resource="0" file="Source/LookAndFeel.h"/>
       <FILE id="MNhFas" name="CircleofFifths.cpp" compile="1" resource="0"
             file="Source/CircleofFifths.cpp"/>
       <FILE id="kkNugD" name="CircleofFifths.h" compile="0" resource="0"
@@ -52,7 +63,7 @@
   </MODULES>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
   <EXPORTFORMATS>
-    <VS2022 targetFolder="Builds/VisualStudio2022" extraCompilerFlags="/W4">
+    <VS2022 targetFolder="Builds/VisualStudio2022" extraCompilerFlags="/W4 /utf-8">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" targetName="NEK" enablePluginBinaryCopyStep="1"/>
         <CONFIGURATION isDebug="0" name="Release" targetName="NEK"/>

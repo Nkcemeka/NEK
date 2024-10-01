@@ -60,24 +60,18 @@ void CircleofFifths::paint(juce::Graphics& g)
        You should replace everything in this method with your own
        drawing code..
     */
-    g.setColour(juce::Colours::black);
+
     auto bounds = getLocalBounds();
     auto cx = bounds.getCentreX();
     auto cy = bounds.getCentreY();
-    juce::Rectangle<int> cent{ cx - 5, cy - 5, 10, 10 };
-    g.fillRect(cent);
 
     // Draw an outer and inner circle
     g.setColour(juce::Colours::black);
 
     // we reduced outer circle by thickness to allow circle not get chopped off
-    g.drawEllipse(bounds.toFloat().reduced(1), 1); // outer circle
+    g.drawEllipse(bounds.toFloat().reduced(5), 5); // outer circle
     g.drawEllipse(bounds.toFloat().reduced(56), 1); // inner circle
-
-    g.setColour(juce::Colours::black);
-    g.setFont(14.0f);
-    g.drawText("", getLocalBounds(),
-        juce::Justification::centred, true);   // draw some placeholder text
+    g.fillEllipse(bounds.toFloat().reduced(56)); // Make inner circle black
 }
 
 void CircleofFifths::resized()

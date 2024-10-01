@@ -22,10 +22,10 @@ int dist(int pos1, int pos2) {
 }
 
 // Function to get the chord name
-std::string getChordName(std::vector<bool>& noteBuffer,
-    std::vector<bool>& keyBuffer, std::map<int, std::string>& intervalMap,
-    std::map<std::string, std::string>& chordMap, std::map<int, std::string>& noteMap,
-    std::map<int, std::string>& noteMapF, std::map<std::string, std::string>& reverseMap,
+juce::String getChordName(std::vector<bool>& noteBuffer,
+    std::vector<bool>& keyBuffer, std::map<int, juce::String>& intervalMap,
+    std::map<juce::String, juce::String>& chordMap, std::map<int, juce::String>& noteMap,
+    std::map<int, juce::String>& noteMapF, std::map<juce::String, juce::String>& reverseMap,
     bool flats, std::atomic<int>& rootNote) {
     // Clear the noteBuffer; this is important in order
     // to prevent unexpected behaviour when holding down
@@ -49,10 +49,10 @@ std::string getChordName(std::vector<bool>& noteBuffer,
     // Assume the first note in notePos is the root
     int root; // declare the root
     int distance;
-    std::string chordName = "";
+    juce::String chordName = "";
 
     for (int i = 0; i < (int)notePos.size(); ++i) {
-        std::string intervals = "";
+        juce::String intervals = "";
         root = notePos[i];
 
         // Modulo sign ensures we loop to beginning of loop if
@@ -64,7 +64,7 @@ std::string getChordName(std::vector<bool>& noteBuffer,
                 j = 0;
             }
             distance = dist(root, notePos[j]);
-            std::string revInterval = "";
+            juce::String revInterval = "";
 
             if (j < i) {
                 revInterval += reverseMap[intervalMap[distance]];
