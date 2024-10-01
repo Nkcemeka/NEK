@@ -26,4 +26,4 @@ Note that NEK can be built for Linux and Android as well. In my case, I built it
 If you want to contribute, please send me a pull request! If you want to also modify the code for your use, feel free to do so. A shoutout will be appreciated as well :-).
 
 ## Licensing
-To the best of my knowledge, you can build this plugin for your own personal use. I have not made a release yet, and I am not sure I would. I might change my mind once I fully understand the idiosyncrasies that come with Licensing with JUCE. P.S: I heard I might have to use a GPL license to make the code open source. Thinking about it!! It is sad I don't have the option of an MIT License as well.
+To the best of my knowledge, you can build this plugin for your own personal use. I have not made a release yet, and I am not sure I would. I might change my mind once I fully understand the idiosyncrasies that come with Licensing with JUCE. P.S: I heard I might have to use a GPL license to make the code open source. Thinking about it!! I should make an open source release soon!
