@@ -1,8 +1,8 @@
-![alt text](https://raw.githubusercontent.com/Nkcemeka/NEK/main/nek.png "NEK")
+![alt text](./nek.png "NEK")
 
 
 # NEK - A MIDI Chord Analyzer Plugin
-NEK is an open source MIDI chord analyzer plugin. It takes in MIDI notes and outputs a chord name. The algorithm has a database for intervals and what intervals make up the chords. By projecting notes into different pitch classes, it uses an elegant but subtle algorithm to deduce the note and get the appropriate chord. This is all the more remarkable as the database is extensible. Put in the intervals that make up your chord and you are good to go! NEK has also a Circle of Fourths/Fifths visualizer. This can make it useful to identify harmonic patterns while playing. I might include functionality for choosing the key and turning the visualizer to show the progression on the circle in numbers. If I do this, I won't go ahead with the idea of note rendering, but might leave that off to another project. 
+NEK is an open source MIDI chord analyzer. However, it functions as a music educational software as well. NEK can work as a software app or VST plugin. It takes in MIDI notes and outputs a chord name. The algorithm has a database for intervals and what intervals make up the chords. By projecting notes into different pitch classes, it uses an elegant but subtle algorithm to deduce the note and get the appropriate chord. This is all the more remarkable as the database is extensible. Put in the intervals that make up your chord and you are good to go! NEK has also a Circle of Fourths/Fifths visualizer. This can make it useful to identify harmonic patterns while playing. NEK also has notation rendering functionality! As you press notes on the keyboard, they are highlighted on a Grand Stave according to the key you select. 
 
 ## Demo Video
 You can check out a DEMO video of NEK on my LinkedIn page [here](https://www.linkedin.com/posts/chukwuemeka-nkama-0203611b2_recently-i-needed-a-chord-analyzer-plugin-activity-7230562767424917504-Ct0K).
@@ -14,6 +14,12 @@ You can check out a DEMO video of NEK on my LinkedIn page [here](https://www.lin
 - Automated Chord Detection using Deep Learning & Chromograms
 ```
 ---
+
+## Oddities
+There are several odd things to note about NEK:
+- Musical Notation is a very complex process from what I have learnt; there are so many potential sources of errors.
+- Due to the complexity of musical notation, NEK has some weird behaviours. For example, it might render a natural instead of a flat or sharp. The rendering is correct, but it might look weird depending on the context of what you are playing. Be rest assured that this is not an error, but it was a design decision. If I could rebuild the plugin from scratch, I might chage my approach.
+- NEK is limited to three ledger lines above and below the Grand Stave. So yeah, play your MIDI notes in that region :-)
 
 ## Minimum System Requirements
 #### Building NEK
