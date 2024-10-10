@@ -8,10 +8,20 @@
 
 #pragma once
 #include <JuceHeader.h>
+#include "ChordDetector.h"
+#include "Chromagram.h"
+#include "Utils.h"
 
 //==============================================================================
 /**
 */
+namespace ParameterID
+{
+#define PARAMETER_ID(str) const juce::ParameterID str(#str, 1);
+    PARAMETER_ID(mode)
+ #undef PARAMETER_ID
+};
+
 class NEKAudioProcessor  : public juce::AudioProcessor
 {
 public:
@@ -73,8 +83,17 @@ public:
         std::map<juce::String, juce::String>& chordMap, std::map<int, juce::String>& noteMap,
         std::map<int, juce::String>& noteMapF, std::map<juce::String, juce::String>& reverseMap,
         bool flats, std::atomic<int>& rootNote);
-
+    void handleAudioChord(int, const float *);
+    void handleMidiChord(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages);
+    std::atomic<bool> mode{ 0 };
+    juce::AudioProcessorValueTreeState apvts;
 private:
     //==============================================================================
+    float currentSampleRate{ 0.0 };
+    Chromagram c;
+    ChordDetector chordDetector;
+    int prevTime{ 0 };
+    juce::AudioParameterBool* modeParam;
+    juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NEKAudioProcessor)
 };

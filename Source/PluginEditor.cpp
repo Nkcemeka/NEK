@@ -34,9 +34,12 @@ NEKAudioProcessorEditor::NEKAudioProcessorEditor (NEKAudioProcessor& p)
     addAndMakeVisible(grandStave);
     addAndMakeVisible(keyMenu);
     addAndMakeVisible(keyMenuLabel);
+    addAndMakeVisible(audioMidi);
+    addAndMakeVisible(led);
 
     // add Key options
     keyMenu.setColour(juce::ComboBox::outlineColourId, juce::Colours::transparentBlack);
+    keyMenu.setColour(juce::ComboBox::backgroundColourId, juce::Colours::black);
     updateKeyMenu();
     keyMenu.onChange = [this] {keyMenuChanged(); };
 
@@ -68,6 +71,15 @@ NEKAudioProcessorEditor::NEKAudioProcessorEditor (NEKAudioProcessor& p)
     handleButton();
     updateKeyMenu();
         };
+
+    // setup audioMidi button
+    audioMidi.setClickingTogglesState(true);
+    audioMidi.setButtonText("MODE");
+    audioMidi.setColour(juce::TextButton::textColourOnId, juce::Colours::white);
+    audioMidi.setColour(juce::TextButton::textColourOffId, juce::Colours::white);
+    audioMidi.setColour(juce::ComboBox::outlineColourId, juce::Colours::transparentBlack);
+    audioMidi.setColour(juce::TextButton::buttonOnColourId, juce::Colours::black);
+    audioMidi.setColour(juce::TextButton::buttonColourId, juce::Colours::black);
 
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -123,6 +135,12 @@ void NEKAudioProcessorEditor::resized()
 
     // Setup key Menu Label
     keyMenuLabel.setBounds(645, y - 40, 40, 20);
+
+    // Setup audioMidi button
+    audioMidi.setBounds(chordScreen.getBounds().getCentreX() - 40, 22, 80, 25);
+
+    // Setup LED
+    led.setBounds(audioMidi.getBounds().getCentreX() - 5, 8, 10, 10);
 }
 
 void NEKAudioProcessorEditor::setAccidental(bool state)
@@ -183,6 +201,9 @@ void NEKAudioProcessorEditor::timerCallback()
 {
     // Call circleUpdate
     visualizer.circleUpdate(audioProcessor.rootNote);
+
+    // Update LED
+    led.setLED(audioMidi.getToggleState());
 }
 
 void NEKAudioProcessorEditor::keyMenuChanged()

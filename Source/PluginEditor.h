@@ -15,6 +15,7 @@
 #include "CustomMidiKeyboardComponent.h"
 #include "CircleofFifths.h"
 #include "Stave.h"
+#include "LED.h"
 
 //==============================================================================
 /**
@@ -51,6 +52,16 @@ private:
     Stave grandStave{ audioProcessor.keyboardBuffer};
     juce::ComboBox keyMenu;
     juce::Label keyMenuLabel;
+    juce::TextButton audioMidi;
+    LED led;
+
+
+    // Attach mode buton or audioMidi button to parameter in audioProcessor
+    using APVTS = juce::AudioProcessorValueTreeState;
+    using btnAttachment = APVTS::ButtonAttachment;
+
+    btnAttachment modeAttachment{ audioProcessor.apvts, ParameterID::mode.getParamID(),
+    audioMidi };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NEKAudioProcessorEditor)
 };

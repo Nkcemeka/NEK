@@ -5,17 +5,30 @@
               companyWebsite="https://nkcemeka.github.io/Portfolio/" companyEmail="nkcemeka@gmail.com"
               pluginFormats="buildStandalone,buildVST3" pluginCharacteristicsValue="pluginProducesMidiOut,pluginWantsMidiIn"
               pluginManufacturer="NEK" pluginDesc="NEK displays notes on the keyboard and analyzes the chords."
-              pluginManufacturerCode="NEKC">
+              pluginManufacturerCode="NEKC" pluginVST3Category="Analyzer,Fx">
   <MAINGROUP id="nRhQAO" name="NEK">
     <GROUP id="{46088EA8-7512-53F9-EB39-6212A161BF7B}" name="Assets">
-      <FILE id="wHng2n" name="bassClefPNG.png" compile="0" resource="1" file="../../Downloads/bassClefPNG.png"/>
+      <FILE id="ieLoZS" name="bassClefPNG.png" compile="0" resource="1" file="Assets/bassClefPNG.png"/>
       <FILE id="RQCy6G" name="FreeSerif-4aeK.ttf" compile="0" resource="1"
             file="Assets/FreeSerif-4aeK.ttf"/>
       <FILE id="niPAv8" name="g12.png" compile="0" resource="1" file="Assets/g12.png"/>
-      <FILE id="XfZc6q" name="trebleClefPNG.png" compile="0" resource="1"
-            file="../../Downloads/trebleClefPNG.png"/>
+      <FILE id="OtgKxC" name="trebleClefPNG.png" compile="0" resource="1"
+            file="Assets/trebleClefPNG.png"/>
     </GROUP>
     <GROUP id="{8594B36D-DEB6-AD90-B17B-48A72CE0E079}" name="Source">
+      <FILE id="zEXQSw" name="Utils.h" compile="0" resource="0" file="Source/Utils.h"/>
+      <FILE id="zBJWRU" name="LED.cpp" compile="1" resource="0" file="Source/LED.cpp"/>
+      <FILE id="AcV1mL" name="LED.h" compile="0" resource="0" file="Source/LED.h"/>
+      <FILE id="SXTwmz" name="_kiss_fft_guts.h" compile="0" resource="0"
+            file="Source/_kiss_fft_guts.h"/>
+      <FILE id="vazt3d" name="ChordDetector.cpp" compile="1" resource="0"
+            file="Source/ChordDetector.cpp"/>
+      <FILE id="BJBckk" name="ChordDetector.h" compile="0" resource="0" file="Source/ChordDetector.h"/>
+      <FILE id="VFgCE0" name="Chromagram.cpp" compile="1" resource="0" file="Source/Chromagram.cpp"/>
+      <FILE id="GXjd3i" name="Chromagram.h" compile="0" resource="0" file="Source/Chromagram.h"/>
+      <FILE id="UpehXf" name="kiss_fft.c" compile="1" resource="0" file="Source/kiss_fft.c"/>
+      <FILE id="NnUq8F" name="kiss_fft.h" compile="0" resource="0" file="Source/kiss_fft.h"/>
+      <FILE id="D6BQth" name="kissfft.hh" compile="0" resource="0" file="Source/kissfft.hh"/>
       <FILE id="W3uTbg" name="NoteHead.cpp" compile="1" resource="0" file="Source/NoteHead.cpp"/>
       <FILE id="AGtpbh" name="NoteHead.h" compile="0" resource="0" file="Source/NoteHead.h"/>
       <FILE id="r1xhkM" name="Stave.cpp" compile="1" resource="0" file="Source/Stave.cpp"/>

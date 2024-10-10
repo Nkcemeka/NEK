@@ -20,7 +20,8 @@ NEKAudioProcessor::NEKAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       ), noteBuffer(12, false), keyboardBuffer(128, false)
+                       ), noteBuffer(12, false), keyboardBuffer(128, false),
+    c{ 512, 44100 }, apvts{*this, nullptr, "Parameters", createParameterLayout()}
 #endif
 {
     intervalMap = intMAP;
@@ -31,6 +32,9 @@ NEKAudioProcessor::NEKAudioProcessor()
     flats = 0;
     ch = "";
     noteNum = 0;
+
+    // setup Parameters
+    castParameter(apvts, ParameterID::mode, modeParam);
 }
 
 NEKAudioProcessor::~NEKAudioProcessor()
@@ -104,6 +108,11 @@ void NEKAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+    currentSampleRate = sampleRate; 
+    c.setSamplingFrequency(currentSampleRate);
+    //c.setChromaCalculationInterval((int)(currentSampleRate*0.01)); // default: 8192 (about 17% of sample rate of 48k)
+    c.setChromaCalculationInterval(480);
+    prevTime = juce::Time::getMillisecondCounterHiRes();
 }
 
 void NEKAudioProcessor::releaseResources()
@@ -140,25 +149,13 @@ bool NEKAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) cons
 
 void NEKAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-    // Clear the buffer. We don't need audio
-    buffer.clear();
-    keyboardState.processNextMidiBuffer(midiMessages, 0, buffer.getNumSamples(), true);
+    // We need to process audio if audio mode is on
+    const float* channelData = buffer.getReadPointer(0);
+    int numSamples = buffer.getNumSamples();
 
-    for (const auto metadata : midiMessages)
-    {
-        auto message = metadata.getMessage();
-        noteNum = message.getNoteNumber() % 12;
-
-        // Update the keyboardBuffer
-        if (message.isNoteOn()) {
-            keyboardBuffer[message.getNoteNumber()] = true;
-        }
-        else if (message.isNoteOff()) {
-            keyboardBuffer[message.getNoteNumber()] = false;
-        }
-    }
-    handleChord(noteBuffer, keyboardBuffer, intervalMap, chordMap, noteMap,
-        noteMapF, reverseMap, flats, rootNote);
+    if (modeParam->get()) { 
+        handleAudioChord(numSamples, channelData); }
+    else { handleMidiChord(buffer, midiMessages); }
 }
 
 //==============================================================================
@@ -178,12 +175,18 @@ void NEKAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+    copyXmlToBinary(*apvts.copyState().createXml(), destData);
 }
 
 void NEKAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+    std::unique_ptr<juce::XmlElement> xml(getXmlFromBinary(data, sizeInBytes));
+    if (xml.get() != nullptr && xml->hasTagName(apvts.state.getType())) {
+        apvts.replaceState(juce::ValueTree::fromXml(*xml));
+        //parametersChanged.store(true)l
+    }
 }
 
 //==============================================================================
@@ -219,4 +222,133 @@ void NEKAudioProcessor::handleChord(std::vector<bool>& noteBuffer,
         ch = ch + "";
         ch = ch.substring(0, ch.length() - 2);
     };
+}
+
+void NEKAudioProcessor::handleMidiChord(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+{
+
+    //Clear the buffer. We don't need audio
+    buffer.clear();
+    keyboardState.processNextMidiBuffer(midiMessages, 0, buffer.getNumSamples(), true);
+
+    for (const auto metadata : midiMessages)
+    {
+        auto message = metadata.getMessage();
+        noteNum = message.getNoteNumber() % 12;
+
+        // Update the keyboardBuffer
+        if (message.isNoteOn()) {
+            keyboardBuffer[message.getNoteNumber()] = true;
+        }
+        else if (message.isNoteOff()) {
+            keyboardBuffer[message.getNoteNumber()] = false;
+        }
+    }
+    handleChord(noteBuffer, keyboardBuffer, intervalMap, chordMap, noteMap,
+        noteMapF, reverseMap, flats, rootNote);
+}
+
+void NEKAudioProcessor::handleAudioChord(int numSamples, const float* channelData) {
+    // convert channelData to double and calculate max amp. and peak amp.
+    std::vector<double> doubleChannelData(numSamples);
+    double maximum = 0;
+    double rmsThresh = 0.001;
+    double rms = 0;
+    double rmsTotal = 0;
+
+    for (int i = 0; i < numSamples; ++i) {
+        doubleChannelData[i] = static_cast<double>(channelData[i]);
+        maximum = juce::jmax(maximum, abs(doubleChannelData[i]));
+        rmsTotal += pow(channelData[i], 2);
+    }
+
+    rms = rmsTotal / numSamples;
+
+
+    if (maximum >= 0.001) { // To ensure the signal isn't silent
+        if (rms >= rmsThresh) {
+            // Convert audio samples to chromagram
+            //Chromagram c(numSamples, currentSampleRate);
+            c.setInputAudioFrameSize(numSamples);
+            c.processAudioFrame(doubleChannelData);
+
+            if (c.isReady())
+            {
+                //if (juce::Time::getMillisecondCounterHiRes() - prevTime <= 500) { return; };
+                std::vector<double> chroma = c.getChromagram();
+
+                // do something with the chromagram here
+                chordDetector.detectChord(chroma);
+
+                juce::String root;
+                if (chordDetector.quality == 0 && chordDetector.intervals == 0) {
+                    rootNote = chordDetector.rootNote % 12;
+                    if (flats) { root = noteMapF[rootNote]; }
+                    else { root = noteMap[chordDetector.rootNote % 12]; };
+
+                    ch = root + "Min";
+                }
+                else if (chordDetector.quality == 1 && chordDetector.intervals == 0) {
+                    rootNote = chordDetector.rootNote % 12;
+                    if (flats) { root = noteMapF[rootNote]; }
+                    else { root = noteMap[chordDetector.rootNote % 12]; };
+
+                    ch = root + "Maj";
+                }
+                else if (chordDetector.quality == 2 && chordDetector.intervals == 2) {
+                    rootNote = chordDetector.rootNote % 12;
+                    if (flats) { root = noteMapF[rootNote]; }
+                    else { root = noteMap[chordDetector.rootNote % 12]; };
+
+                    ch = root + "Sus2";
+                }
+                else if (chordDetector.quality == 2 && chordDetector.intervals == 4) {
+                    rootNote = chordDetector.rootNote % 12;
+                    if (flats) { root = noteMapF[rootNote]; }
+                    else { root = noteMap[chordDetector.rootNote % 12]; };
+
+                    ch = root + "Sus4";
+                }
+                else if (chordDetector.quality == 1 && chordDetector.intervals == 7) {
+                    rootNote = chordDetector.rootNote % 12;
+                    if (flats) { root = noteMapF[rootNote]; }
+                    else { root = noteMap[chordDetector.rootNote % 12]; };
+
+                    ch = root + "Maj7";
+                }
+                else if (chordDetector.quality == 0 && chordDetector.intervals == 7) {
+                    rootNote = chordDetector.rootNote % 12;
+                    if (flats) { root = noteMapF[rootNote]; }
+                    else { root = noteMap[chordDetector.rootNote % 12]; };
+
+                    ch = root + "Min7";
+                }
+                else if (chordDetector.quality == 3 && chordDetector.intervals == 7) {
+                    rootNote = chordDetector.rootNote % 12;
+                    if (flats) { root = noteMapF[rootNote]; }
+                    else { root = noteMap[chordDetector.rootNote % 12]; };
+
+                    ch = root + "7";
+                }
+
+
+                prevTime = juce::Time::getMillisecondCounterHiRes();
+            }
+        }
+    }
+    else { ch = " "; rootNote = -1; }
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout NEKAudioProcessor::createParameterLayout()
+{
+    juce::AudioProcessorValueTreeState::ParameterLayout layout;
+
+    // add mode button to layout
+    layout.add(std::make_unique<juce::AudioParameterBool>(
+        ParameterID::mode,
+        "Audio/MIDI Mode",
+        false
+    ));
+
+    return layout;
 }

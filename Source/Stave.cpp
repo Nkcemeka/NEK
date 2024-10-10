@@ -84,6 +84,10 @@ void Stave::paint (juce::Graphics& g)
     g.drawImage(bassImage, targetAreaBass, juce::RectanglePlacement::stretchToFit, false);
     g.drawImage(trebleImage, targetAreaTreble, juce::RectanglePlacement::centred, false);
 
+    // You can use drawText once you get a font
+    //g.drawText(juce::CharPointer_UTF8("\xf0\x9d\x84\xa2"), targetAreaBass, juce::Justification::centredLeft);
+    //g.drawText(juce::CharPointer_UTF8("\xf0\x9d\x84\x9e"), targetAreaTreble, juce::Justification::centredLeft);
+
 
     // Draw Key Singature
     // Get the bounds of the keySignature component. This should be a long rectangle
