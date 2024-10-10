@@ -1,4 +1,4 @@
-![alt text](./nek.png "NEK")
+<img src="./nek.png" width="300" />
 
 
 # NEK - A MIDI Chord Analyzer Plugin
