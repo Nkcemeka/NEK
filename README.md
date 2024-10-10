@@ -2,7 +2,7 @@
 
 
 # NEK - A MIDI Chord Analyzer Plugin
-NEK is an open source MIDI chord analyzer. It functions as a music educational software as well. NEK can work as a software app or VST plugin. It takes in MIDI notes and outputs a chord name. The algorithm has a database for intervals and what intervals make up the chords. By projecting notes into different pitch classes, it uses an elegant but subtle algorithm to deduce the note and get the appropriate chord. This is all the more remarkable as the database is extensible. Put in the intervals that make up your chord and you are good to go! NEK has also a Circle of Fourths/Fifths visualizer. This can make it useful to identify harmonic patterns while playing. Lastly, NEK comes with notation rendering functionality! As you press notes on the keyboard, they are highlighted on a Grand Stave according to the key you select. 
+NEK is an open source MIDI chord analyzer and is essentially a music education software. NEK can work as a software app or VST plugin. It takes in MIDI notes and outputs a chord name. The algorithm has a database for intervals and what intervals make up the chords. By projecting notes into different pitch classes, it uses an elegant but subtle algorithm to deduce the note and get the appropriate chord. This is all the more remarkable as the database is extensible. Put in the intervals that make up your chord and you are good to go! NEK has also a Circle of Fourths/Fifths visualizer. This can make it useful to identify harmonic patterns while playing. NEK can also accept audio by pressing the "mode" button. It implements a DSP algo from [Adam Stark's PhD Thesis](https://github.com/adamstark/Chord-Detector-and-Chromagram). The algorithm is a brilliant one. However, it needs lots of work. It is susceptible to ghost notes and there are some other issues. I intend to replace this with an AI functionality in the future. Hence, see feature as experimental.  Lastly, NEK comes with notation rendering functionality! As you press notes on the keyboard, they are highlighted on a Grand Stave according to the key you select. 
 
 ## Demo Video
 You can check out a DEMO video of NEK on my LinkedIn page [here](https://www.linkedin.com/posts/chukwuemeka-nkama-0203611b2_recently-i-needed-a-chord-analyzer-plugin-activity-7230562767424917504-Ct0K).
@@ -11,9 +11,12 @@ You can check out a DEMO video of NEK on my LinkedIn page [here](https://www.lin
 ---
 ```
 - Notation Rendering Capabilities (This is no longer a todo :-)
-- Automated Chord Detection using Deep Learning & Chromograms
+- Automated Chord Detection using Deep Learning & Chromograms (I achieved one with DSP, but it is not perfect and not entirely accurate. With time, I might look into how to optimize it!)
 ```
 ---
+
+## Automated Chord Detection from Audio
+This is an experimental feature and is not highly accurate. However to use this, press the mode button. Once the LED turns red, it means you are in audio mode. To switch back to MIDI, press the button again. And don't worry about saving your state in the DAW. NEK remembers its previous state in a DAW enviroment!
 
 ## Oddities
 There are several odd things to note about NEK:
