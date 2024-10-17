@@ -54,14 +54,16 @@ void ChordDetector::classifyChromagram()
 	int j;
 	int fifth;
 	int chordindex;
+	int third;
 	
 	// remove some of the 5th note energy from chromagram
 	for (i = 0; i < 12; i++)
 	{
 		fifth = (i+7) % 12;
+		third = (i + 3) % 12;
 		int mseventh = (i + 11) % 12;
 
-		chromagram[fifth] = chromagram[fifth] - (0.9 * chromagram[i]); // original is 0.1
+		chromagram[fifth] = chromagram[fifth] - (0.1 * chromagram[i]); // original is 0.1
 		
 		if (chromagram[fifth] < 0)
 		{

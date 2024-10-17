@@ -185,7 +185,6 @@ void NEKAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
     std::unique_ptr<juce::XmlElement> xml(getXmlFromBinary(data, sizeInBytes));
     if (xml.get() != nullptr && xml->hasTagName(apvts.state.getType())) {
         apvts.replaceState(juce::ValueTree::fromXml(*xml));
-        //parametersChanged.store(true)l
     }
 }
 
@@ -266,7 +265,8 @@ void NEKAudioProcessor::handleAudioChord(int numSamples, const float* channelDat
 
 
     if (maximum >= 0.001) { // To ensure the signal isn't silent
-        if (rms >= rmsThresh) {
+
+        if (rms >= rmsThresh) { // consider signals of relevant energy
             // Convert audio samples to chromagram
             //Chromagram c(numSamples, currentSampleRate);
             c.setInputAudioFrameSize(numSamples);
