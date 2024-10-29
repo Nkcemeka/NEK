@@ -1,4 +1,4 @@
-<img src="./nek.png" width="800" />
+<img src="./nek.svg" width="800" />
 
 
 # NEK - A MIDI Chord Analyzer Plugin
