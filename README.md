@@ -10,13 +10,12 @@ You can check out an early DEMO video of NEK on my LinkedIn page [here](https://
 ## Todo
 ---
 ```
-- Notation Rendering Capabilities (This is no longer a todo :-)
-- Automated Chord Detection using Deep Learning & Chromograms (I achieved one with DSP, but it is not perfect and not entirely accurate. With time, I might look into how to optimize it!)
+Automated Chord Detection using Deep Learning.
 ```
 ---
 
 ## Automated Chord Detection from Audio
-This is an experimental feature and is not highly accurate. However to use this, press the mode button. Once the LED turns red, it means you are in audio mode. To switch back to MIDI, press the button again. And don't worry about saving your state in the DAW. NEK remembers its previous state in a DAW enviroment!
+This is an experimental feature based on DSP and is not highly accurate. However to use this, press the mode button. Once the LED turns red, it means you are in audio mode. To switch back to MIDI, press the button again. And don't worry about saving your state in the DAW. NEK remembers its previous state in a DAW enviroment!
 
 ## Oddities
 There are several odd things to note about NEK:
@@ -31,12 +30,9 @@ There are several odd things to note about NEK:
 Note that NEK can be built for MAC and Linux as well. In my case, I built it on Windows using Projucer.  
 
 #### Downloading NEK
----
-```
-You can access the NEK-v1.0.0-alpha prerelease in the Releases section. Note that this VST3 release is for Windows platforms. Hopefully, a release for MAC and Linux will be available soon.
-```
----
-
+- You can access the NEK-v1.0.0-alpha prerelease in the Releases section. 
+- Note that this VST3 release is for Windows platforms. 
+- Hopefully, a release for MAC and Linux will be available soon.
 
 ## Contributing
 If you want to contribute, please send me a pull request! If you want to also modify the code for your use, feel free to do so. A shoutout will be appreciated as well :-).
