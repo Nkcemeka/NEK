@@ -28,11 +28,18 @@ There are several odd things to note about NEK:
 #### Building NEK
 - C++ Standard: 17
 - Windows: Visual Studio 2019 or Higher
-Note that NEK can be built for Linux and Android as well. In my case, I built it on Windows without issues
+Note that NEK can be built for MAC and Linux as well. In my case, I built it on Windows using Projucer.  
+
+#### Downloading NEK
+---
+```
+You can access the NEK-v1.0.0-alpha prerelease in the Releases section. Note that this VST3 release is for Windows platforms. Hopefully, a release for MAC and Linux will be available soon.
+```
+---
 
 
 ## Contributing
 If you want to contribute, please send me a pull request! If you want to also modify the code for your use, feel free to do so. A shoutout will be appreciated as well :-).
 
 ## Licensing
-To the best of my knowledge, you can build this software for your own personal use. I have not made a release; I am yet to fully understand the idiosyncrasies that come with Licensing with JUCE. P.S: I heard I might have to use a GPL license to make the code open source. Thinking about it!! I should make an open source release soon!
+To the best of my knowledge, you can build this software for your own personal use. I am yet to fully understand the idiosyncrasies that come with Licensing with JUCE. But the software will be covered under a GPL License. Feel free to clone the repo and edit the code for your own personal use.
